@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1= title 
+  a(href="/logout") Logout 
+
+  if errors
+    ul
+      for error in errors
+        li!= error.msg
+
+  if msg 
+    h1 #{msg}

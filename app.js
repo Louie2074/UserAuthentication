@@ -14,7 +14,11 @@ require('dotenv').config();
 var app = express();
 const mongoDB = process.env.MONGO_URI;
 const clientP = mongoose
-  .connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(mongoDB, {
+    dbName: 'Users',
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then((m) => m.connection.getClient());
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -44,6 +48,15 @@ app.use(
     },
   })
 );
+
+require('./config/passport');
+app.use(passport.initialize());
+app.use(passport.session());
+app.use((req, res, next) => {
+  console.log(req.session);
+  console.log(req.user);
+  next();
+});
 
 app.use('/', indexRouter);
 
